@@ -26,12 +26,12 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | Job Work Portal </title>
       </Helmet>
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Bienvenue
         </Typography>
 
         <Grid container spacing={3}>
@@ -177,9 +177,9 @@ export default function DashboardAppPage() {
               title="Traffic by Site"
               list={[
                 {
-                  name: 'FaceBook',
+                  name: 'Microsoft',
                   value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
+                  icon: <Iconify icon={'logos:microsoft-icon'} /*color="#1877F2"*/ width={32} />,
                 },
                 {
                   name: 'Google',

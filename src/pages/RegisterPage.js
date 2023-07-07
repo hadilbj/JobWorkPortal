@@ -14,15 +14,14 @@ import useResponsive from "../hooks/useResponsive";
 //components
 import Logo from "../components/logo";
 import Iconify from "../components/iconify";
-import  LoginForm  from "../sections/auth/login/LoginForm";
-import { Link as RouterLink } from 'react-router-dom';
+import RegisterForm from "../sections/auth/register/RegisterForm";
+import { Link as RouterLink } from "react-router-dom";
 
 const StyledRoot = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     display: "flex",
   },
 }));
-
 const StyledSection = styled("div")(({ theme }) => ({
   width: "100%",
   maxWidth: 480,
@@ -43,17 +42,14 @@ const StyledContent = styled("div")(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
-
-export default function LoginPage() {
+export default function RegisterPage() {
   const mdUp = useResponsive("up", "md");
 
   return (
     <>
       <Helmet>
-        <title> Login | Job Work Portal </title>
+        <title> Register | Job Work Portal </title>
       </Helmet>
-
       <StyledRoot>
         <Logo
           sx={{
@@ -62,7 +58,6 @@ export default function LoginPage() {
             left: { xs: 16, sm: 24, md: 40 },
           }}
         />
-
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
@@ -82,12 +77,11 @@ export default function LoginPage() {
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
-            Vous n’avez pas de compte ? {""}
-            <Link component={RouterLink} to="/register" variant="subtitle2">
-    Inscrivez-vous
-  </Link>
+              J'ai dèjà un compte, {""}
+              <Link component={RouterLink} to="/login" variant="subtitle2">
+                Connecter
+              </Link>
             </Typography>
-
             <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
                 <Iconify
@@ -106,16 +100,13 @@ export default function LoginPage() {
                   height={22}
                 />
               </Button>
-
             </Stack>
-
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 OU
               </Typography>
             </Divider>
-
-            <LoginForm />
+            <RegisterForm/>
           </StyledContent>
         </Container>
       </StyledRoot>
