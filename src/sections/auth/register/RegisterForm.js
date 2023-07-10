@@ -134,18 +134,24 @@ export default function RegisterForm() {
         <DialogTitle>Demande envoyée</DialogTitle>
         <DialogContent>
           {emailReceived ? (
-            <p>Votre demande a été envoyée avec succès. Vous pouvez maintenant vous connecter.</p>
+            <p>
+              Votre demande a été envoyée avec succès. Vous pouvez maintenant
+              vous connecter.
+            </p>
           ) : (
-
-            <p>Votre demande a été envoyée avec succès. Vous recevrez bientôt un courriel de confirmation.</p>
+            <p>
+              Votre demande a été envoyée avec succès. Vous recevrez bientôt un
+              courriel de confirmation.
+            </p>
           )}
           <p>Merci de vous être inscrit !</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose}>Fermer</Button>
-          {emailReceived && (
-            <Button onClick={handleLoginClick}>Aller à la page de connexion</Button>
-          )}
+
+          <Button onClick={handleLoginClick}>
+            Aller à la page de connexion
+          </Button>
         </DialogActions>
       </Dialog>
     </>
