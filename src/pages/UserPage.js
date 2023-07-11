@@ -38,7 +38,6 @@ import USERLIST from "../_mock/user";
 import Select from "react-select";
 import { Snackbar } from "@mui/material";
 
-
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -99,7 +98,6 @@ const companyOptions = [
 ];
 
 export default function UserPage() {
-  const [open, setOpen] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -111,6 +109,9 @@ export default function UserPage() {
   const [companyName, setCompanyName] = useState("");
   const [showCompanyList, setShowCompanyList] = useState(false);
   const [isUserCreated, setIsUserCreated] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState(null);
 
   const handleRoleChange = (selectedOption) => {
     const selectedRole = selectedOption ? selectedOption.value : "";
@@ -123,12 +124,13 @@ export default function UserPage() {
     setCompanyName(selectedOption ? selectedOption.value : "");
   };
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (event, user) => {
+    setSelectedUser(user);
+    setMenuAnchor(event.currentTarget);
   };
 
   const handleCloseMenu = () => {
-    setOpen(null);
+    setMenuAnchor(null);
   };
 
   const handleRequestSort = (event, property) => {
@@ -208,13 +210,20 @@ export default function UserPage() {
     handleCloseModal();
   };
   const handleEdit = () => {
-    // TODO: Add logic for edit action
+    setOpenModal(true);
     handleCloseMenu();
   };
 
-  const handleDelete = () => {
-    // TODO: Add logic for delete action
-    handleCloseMenu();
+  const handleDelete = (event, user) => {
+    if (selected.length === 0) {
+      return;
+    }
+
+    setSelectedUser(user);
+    setMenuAnchor(event.currentTarget);
+  };
+  const handleDeleteConfirmationClose = () => {
+    setDeleteConfirmationOpen(false);
   };
 
   return (
@@ -228,7 +237,7 @@ export default function UserPage() {
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          mb={5}
+          mb={6}
         >
           <Typography variant="h4" gutterBottom>
             User
@@ -238,7 +247,7 @@ export default function UserPage() {
             startIcon={<Iconify icon="eva:plus-fill" />}
             onClick={handleOpenModal}
           >
-            Nouveau Utilisateur
+            nouvel Utilisateur
           </Button>
         </Stack>
 
@@ -330,6 +339,7 @@ export default function UserPage() {
                             >
                               <Iconify icon={"eva:more-vertical-fill"} />
                             </IconButton>
+                            
                           </TableCell>
                         </TableRow>
                       );
@@ -382,8 +392,8 @@ export default function UserPage() {
       </Container>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
+        open={Boolean(menuAnchor)}
+        anchorEl={menuAnchor}
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
@@ -401,12 +411,12 @@ export default function UserPage() {
       >
         <MenuItem onClick={handleEdit}>
           <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
-          Edit
+          Modifier
         </MenuItem>
 
         <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
           <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
-          Delete
+          Supprimer
         </MenuItem>
       </Popover>
 
@@ -447,7 +457,21 @@ export default function UserPage() {
           </Button>
         </DialogActions>
       </Dialog>
-
+      <Dialog
+        open={deleteConfirmationOpen}
+        onClose={handleDeleteConfirmationClose}
+      >
+        <DialogTitle>Supprimer cet utilisateur ?</DialogTitle>
+        <DialogContent>
+          {/* Contenu supplémentaire de la boîte de dialogue si nécessaire */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteConfirmationClose}>Annuler</Button>
+          <Button onClick={handleDelete} variant="contained" color="primary">
+            Continuer
+          </Button>
+        </DialogActions>
+      </Dialog>
       {isUserCreated && (
         <Snackbar
           open={isUserCreated}
