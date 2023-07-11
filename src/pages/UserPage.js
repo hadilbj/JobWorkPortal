@@ -35,8 +35,9 @@ import Scrollbar from "../components/scrollbar";
 import { UserListHead, UserListToolbar } from "../sections/@dashboard/user";
 // mock
 import USERLIST from "../_mock/user";
-import RegisterForm from "../sections/auth/register/RegisterForm";
 import Select from "react-select";
+import { Snackbar } from "@mui/material";
+
 
 // ----------------------------------------------------------------------
 
@@ -109,6 +110,7 @@ export default function UserPage() {
   const [role, setRole] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [showCompanyList, setShowCompanyList] = useState(false);
+  const [isUserCreated, setIsUserCreated] = useState(false);
 
   const handleRoleChange = (selectedOption) => {
     const selectedRole = selectedOption ? selectedOption.value : "";
@@ -197,10 +199,22 @@ export default function UserPage() {
 
   const handleCreateUser = (event) => {
     event.preventDefault();
-    // Perform actions tocreate the user (e.g., send data to a server, update the user list)
+    // Perform actions to create the user (e.g., send data to a server, update the user list)
+
+    // Set isUserCreated to true to display the success message
+    setIsUserCreated(true);
 
     // Close the modal after creating the user
     handleCloseModal();
+  };
+  const handleEdit = () => {
+    // TODO: Add logic for edit action
+    handleCloseMenu();
+  };
+
+  const handleDelete = () => {
+    // TODO: Add logic for delete action
+    handleCloseMenu();
   };
 
   return (
@@ -385,12 +399,12 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleEdit}>
           <Iconify icon={"eva:edit-fill"} sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: "error.main" }}>
+        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
           <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
@@ -407,11 +421,7 @@ export default function UserPage() {
           <form onSubmit={handleCreateUser}>
             <Stack spacing={3}>
               {/* Champs de saisie */}
-
-              <TextField
-                name="first name"
-                label="Prénom"
-              />
+              <TextField name="first name" label="Prénom" />
               <TextField name="last name" label="Nom" />
               <TextField name="email" label="Adresse email" />
 
@@ -437,6 +447,15 @@ export default function UserPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {isUserCreated && (
+        <Snackbar
+          open={isUserCreated}
+          autoHideDuration={3000}
+          onClose={() => setIsUserCreated(false)}
+          message="Utilisateur ajouté avec succès"
+        />
+      )}
     </>
   );
 }
