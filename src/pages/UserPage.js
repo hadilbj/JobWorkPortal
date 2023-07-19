@@ -229,9 +229,9 @@ export default function UserPage() {
   const [data, setdata] = useState("");
   const fetchCreateUSer = () => {
     const userData = {
-      email: "example@example.com",
-      firstname: "John",
-      lastname: "Doe",
+      firstname: "",
+      lastname: "",
+      email: "",
     };
     Axios.post("http://localhost:5050/user/createUser", userData).then(
       (res) => {
