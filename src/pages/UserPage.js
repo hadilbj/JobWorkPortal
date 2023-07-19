@@ -1,7 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Axios from "axios";
 // @mui
 import {
   Card,
@@ -225,6 +226,22 @@ export default function UserPage() {
   const handleDeleteConfirmationClose = () => {
     setDeleteConfirmationOpen(false);
   };
+  const [data, setdata] = useState("");
+  const fetchCreateUSer = () => {
+    const userData = {
+      email: "example@example.com",
+      firstname: "John",
+      lastname: "Doe",
+    };
+    Axios.post("http://localhost:5050/user/createUser", userData).then(
+      (res) => {
+        setdata(res.data);
+      }
+    );
+  };
+  useEffect(() => {
+    fetchCreateUSer();
+  }, []);
 
   return (
     <>
@@ -339,7 +356,6 @@ export default function UserPage() {
                             >
                               <Iconify icon={"eva:more-vertical-fill"} />
                             </IconButton>
-                            
                           </TableCell>
                         </TableRow>
                       );
@@ -431,8 +447,8 @@ export default function UserPage() {
           <form onSubmit={handleCreateUser}>
             <Stack spacing={3}>
               {/* Champs de saisie */}
-              <TextField name="first name" label="Prénom" />
-              <TextField name="last name" label="Nom" />
+              <TextField name="firstname" label="Prénom" />
+              <TextField name="lastname" label="Nom" />
               <TextField name="email" label="Adresse email" />
 
               <Select
@@ -452,7 +468,12 @@ export default function UserPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseModal}>Annuler</Button>
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            onClick={fetchCreateUSer}
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
             Créer
           </Button>
         </DialogActions>
