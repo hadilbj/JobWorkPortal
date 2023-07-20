@@ -113,6 +113,9 @@ export default function UserPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleRoleChange = (selectedOption) => {
     const selectedRole = selectedOption ? selectedOption.value : "";
@@ -229,19 +232,23 @@ export default function UserPage() {
   const [data, setdata] = useState("");
   const fetchCreateUSer = () => {
     const userData = {
-      firstname: "",
-      lastname: "",
-      email: "",
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
     };
-    Axios.post("http://localhost:5050/user/createUser", userData).then(
-      (res) => {
+  
+    Axios.post("http://localhost:5050/user/createUser", userData)
+      .then((res) => {
         setdata(res.data);
-      }
-    );
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
+      });
   };
+  
   useEffect(() => {
     fetchCreateUSer();
-  }, []);
+  }, [firstname, lastname, email]);
 
   return (
     <>
@@ -447,9 +454,24 @@ export default function UserPage() {
           <form onSubmit={handleCreateUser}>
             <Stack spacing={3}>
               {/* Champs de saisie */}
-              <TextField name="firstname" label="Prénom" />
-              <TextField name="lastname" label="Nom" />
-              <TextField name="email" label="Adresse email" />
+              <TextField
+                name="firstname"
+                label="Prénom"
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
+              />
+              <TextField
+                name="lastname"
+                label="Nom"
+                value={lastname}
+                onChange={(e) => setLastname(e.target.value)}
+              />
+              <TextField
+                name="email"
+                label="Adresse email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
               <Select
                 options={options}
