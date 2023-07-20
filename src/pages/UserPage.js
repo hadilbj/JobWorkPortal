@@ -3,6 +3,8 @@ import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import { useRef } from "react";
+
 // @mui
 import {
   Card,
@@ -116,6 +118,8 @@ export default function UserPage() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+
+  const modalRef = useRef(null);
 
   const handleRoleChange = (selectedOption) => {
     const selectedRole = selectedOption ? selectedOption.value : "";
@@ -236,16 +240,17 @@ export default function UserPage() {
       lastname: lastname,
       email: email,
     };
-  
+
     Axios.post("http://localhost:5050/user/createUser", userData)
       .then((res) => {
         setdata(res.data);
+        handleCloseModal();
       })
       .catch((error) => {
         console.error("Error creating user:", error);
       });
   };
-  
+
   useEffect(() => {
     fetchCreateUSer();
   }, [firstname, lastname, email]);
@@ -448,6 +453,7 @@ export default function UserPage() {
         onClose={handleCloseModal}
         maxWidth="md"
         fullWidth
+        ref={modalRef}
       >
         <DialogTitle>Ajouter un nouvel utilisateur</DialogTitle>
         <DialogContent>
