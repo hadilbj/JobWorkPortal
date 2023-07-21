@@ -244,16 +244,20 @@ export default function UserPage() {
     Axios.post("http://localhost:5050/user/createUser", userData)
       .then((res) => {
         setdata(res.data);
-        handleCloseModal();
+        console.log(res);
+        //handleCloseModal();
+      })
+      .then(() => {
+        setInterval(handleCloseModal, 5000);
       })
       .catch((error) => {
         console.error("Error creating user:", error);
       });
   };
-
-  useEffect(() => {
+  const handleSubmit = () => {
     fetchCreateUSer();
-  }, [firstname, lastname, email]);
+    handleCloseModal();
+  };
 
   return (
     <>
