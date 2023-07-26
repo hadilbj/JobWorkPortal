@@ -209,6 +209,8 @@ export default function UserPage() {
 
   const handleCreateUser = (event) => {
     event.preventDefault();
+    fetchCreateUSer(); // Call the function to create the user
+    setIsUserCreated(true);
     // Perform actions to create the user (e.g., send data to a server, update the user list)
 
     // Set isUserCreated to true to display the success message
@@ -245,10 +247,13 @@ export default function UserPage() {
       .then((res) => {
         setdata(res.data);
         console.log(res);
-        //handleCloseModal();
       })
-      .then(() => {
+      /*       .then(() => {
         setInterval(handleCloseModal, 5000);
+      }) */
+      .then((res) => {
+        setdata(res.data);
+        console.log(res);
       })
       .catch((error) => {
         console.error("Error creating user:", error);
@@ -501,7 +506,7 @@ export default function UserPage() {
         <DialogActions>
           <Button onClick={handleCloseModal}>Annuler</Button>
           <Button
-            onClick={fetchCreateUSer}
+            onClick={handleCreateUser}
             type="submit"
             variant="contained"
             color="primary"
