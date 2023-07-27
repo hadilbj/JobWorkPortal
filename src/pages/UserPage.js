@@ -118,6 +118,7 @@ export default function UserPage() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+  const [users, setUsers] = useState([]);
 
   const modalRef = useRef(null);
 
@@ -263,6 +264,21 @@ export default function UserPage() {
     fetchCreateUSer();
     handleCloseModal();
   };
+
+  const fetchAllUser = () => {
+    Axios.get("http://localhost:5050/user/getAllUser")
+      .then((res) => {
+        setUsers(res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchAllUser();
+  }, []);
 
   return (
     <>

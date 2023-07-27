@@ -1,27 +1,44 @@
-import { faker } from '@faker-js/faker';
+//import { faker } from '@faker-js/faker';
 import { sample } from 'lodash';
+import TABLE_HEAD from '../pages/UserPage'
 
 // ----------------------------------------------------------------------
 
-const users = [...Array(24)].map((_, index) => ({
-  id: faker.datatype.uuid(),
+const users = users.map((user, index) => ({
+  id: user.id,
   avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-  name: faker.name.fullName(),
-  company: faker.company.name(),
-  isVerified: faker.datatype.boolean(),
+  name: user.name,
+  company: user.company,
+  isVerified: user.isVerified,
   status: sample(['active', 'banned']),
-  role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
-  ]),
+  role: sample(TABLE_HEAD), // Assuming TABLE_HEAD is an array of roles
 }));
 
 export default users;
+
+
+/* import { faker } from 'faker';
+
+const users = [...Array(24)].map(() => {
+  const id = faker.datatype.uuid();
+  //const avatarUrl = `/assets/images/avatars/avatar_${index + 1}.jpg`;
+  const name = faker.name.fullName();
+  const company = faker.company.name();
+  const isVerified = faker.datatype.boolean();
+  const status = faker.random.arrayElement(['active', 'banned']);
+
+  const role = prompt(`Quel rôle souhaitez-vous pour l'utilisateur ${name}?`);
+
+  return {
+    id,
+    //avatarUrl,
+    name,
+    company,
+    isVerified,
+    status,
+    role,
+  };
+});
+
+export default users;
+ */
