@@ -16,6 +16,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import Iconify from "../../../components/iconify";
 import Select from "react-select";
+import Axios from "axios";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -25,7 +26,13 @@ export default function RegisterForm() {
   const [companyName, setCompanyName] = useState("");
   const [showCompanyList, setShowCompanyList] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [emailReceived, setEmailReceived] = useState(false); // État pour indiquer si l'e-mail de confirmation a été reçu
+  const [emailReceived, setEmailReceived] = useState(false);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isUserCreated, setIsUserCreated] = useState(false);
+  const [error, setError] = useState("");
 
   const handleRoleChange = (selectedOption) => {
     const selectedRole = selectedOption ? selectedOption.value : "";
@@ -40,22 +47,26 @@ export default function RegisterForm() {
 
   const handleClick = () => {
     if (role && companyName) {
-      // Envoyer la demande et afficher la modal de confirmation
       setShowModal(true);
     } else {
-      // Gérer le cas où tous les champs ne sont pas remplis
+      setError("Veuillez remplir tous les champs.");
     }
   };
 
   const handleModalClose = () => {
     setShowModal(false);
     if (emailReceived) {
-      navigate("/dashboard", { replace: true }); // Rediriger vers le tableau de bord si l'e-mail de confirmation a été reçu
+      navigate("/dashboard", { replace: true });
     }
   };
 
   const handleLoginClick = () => {
-    navigate("/login"); // Rediriger vers la page de connexion
+    navigate("/login");
+  };
+
+  const handleRegisterUser = (event) => {
+    event.preventDefault();
+    fetchRegisterUser();
   };
 
   const options = [
@@ -72,51 +83,89 @@ export default function RegisterForm() {
     { value: "societe3", label: "Société 3" },
   ];
 
+  const fetchRegisterUser = () => {
+    const userData = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password,
+    };
+
+    Axios.post("http://localhost:5050/user/register", userData)
+      .then((res) => {
+        setIsUserCreated(true);
+        setEmailReceived(true);
+        setError("");
+      })
+      .catch((error) => {
+        setIsUserCreated(false);
+        setError("Erreur lors de la création de l'utilisateur.");
+        console.error("Error creating user:", error);
+      });
+  };
+
   return (
     <>
-      <Stack spacing={3}>
-        {/* Champs de saisie */}
-        <div>
+      <form onSubmit={handleRegisterUser}>
+        <Stack spacing={3}>
+          {/* Champs de saisie */}
+          <div>
+            <TextField
+              style={{ marginRight: "5%" }}
+              name="first name"
+              label="Prénom"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+            />
+            <TextField
+              name="last name"
+              label="Nom"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+            />
+          </div>
           <TextField
-            style={{ marginRight: "5%" }}
-            name="first name"
-            label="Prénom"
+            name="email"
+            label="Adresse email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField name="last name" label="Nom" />
-        </div>
-        <TextField name="email" label="Adresse email" />
-        <TextField
-          name="password"
-          label="Nouveau mot de passe"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  <Iconify
-                    icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
-                  />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Select
-          options={options}
-          onChange={handleRoleChange}
-          placeholder="Choisir un rôle"
-        />
-        {showCompanyList && (
+          <TextField
+            name="password"
+            label="Nouveau mot de passe"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify
+                      icon={showPassword ? "eva:eye-fill" : "eva:eye-off-fill"}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
           <Select
-            options={companyOptions}
-            onChange={handleCompanyChange}
-            placeholder="Choisir une société"
+            options={options}
+            onChange={handleRoleChange}
+            placeholder="Choisir un rôle"
           />
-        )}
-      </Stack>
+          {showCompanyList && (
+            <Select
+              options={companyOptions}
+              onChange={handleCompanyChange}
+              placeholder="Choisir une société"
+            />
+          )}
+        </Stack>
+      </form>
+
       <br />
       {/* Bouton "Envoyer une demande" */}
       <LoadingButton
@@ -154,6 +203,8 @@ export default function RegisterForm() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </>
   );
 }
